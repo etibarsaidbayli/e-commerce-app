@@ -9,7 +9,7 @@ const afterFlex = document.getElementById("afterFlex");
 const LIMIT = 8;
 let total = 0;
 let currentSkip = 0;
-
+// basketSpan.textContent
 fetchProductList(currentSkip);
 
 loadMoreButton.addEventListener("click", () => {
@@ -116,14 +116,16 @@ productsContainer.addEventListener("click", addProductToBasket);
 
 function addProductToBasket(event) {
   let downList = [];
-  if (event.target.matches(".basket-plusSvg")) {
+  if (event.target.matches(".basket-plusSvg") || event.target.matches('.basket-plusBtn')) {
     if (event.target.tagName === "svg") {
       const button = event.target.parentElement;
       const { price, thumbnail, title } = button.dataset;
-
+      basketSpan.classList.remove('basket-nonActive')
+      basketSpan.textContent++
+      
       afterFlex.insertAdjacentHTML(
         "afterend",
-        `<div class="flex justify-between mt-6">
+        `<div class="myFlex flex justify-between mt-6">
       <div class="flex">
         <img
           class="h-20 w-20 object-cover rounded"
@@ -137,6 +139,8 @@ function addProductToBasket(event) {
               class="text-gray-500 focus:outline-none focus:text-gray-600"
             >
               <svg
+            
+                id="plusSpan"
                 class="h-5 w-5"
                 fill="none"
                 stroke-linecap="round"
@@ -150,11 +154,12 @@ function addProductToBasket(event) {
                 ></path>
               </svg>
             </button>
-            <span class="text-gray-700 mx-2">2</span>
+            <span id="countSpan" class="text-gray-700 mx-2"></span>
             <button
               class="text-gray-500 focus:outline-none focus:text-gray-600"
             >
               <svg
+                id="minusSpan"
                 class="h-5 w-5"
                 fill="none"
                 stroke-linecap="round"
@@ -169,9 +174,53 @@ function addProductToBasket(event) {
           </div>
         </div>
       </div>
-      <span class="text-gray-600">${price}$</span>
+      <span id="priceSpan" class="text-gray-600">${price}</span><span>$</span>
     </div>`
+        
       );
+      
+      // let flexs=document.querySelectorAll('.myFlex')
+      // // // downList.push(flexs)
+      // // let incFlex=flexs.childNode()
+      // // console.log(inflex)
+      
+      // // let nodes=flexs.childNodes;
+
+      // // console.log(nodes)
+        let countSpan = document.getElementById("countSpan")
+        let minusSpan=document.getElementById("minusSpan")
+        let plusSpan=document.getElementById("plusSpan")
+        let priceSpan=document.getElementById("priceSpan")
+        
+        minusSpan.onclick=function () {
+          const oldPrice=`${price}`
+          countSpan.textContent--
+          if(countSpan.textContent<=0) {
+            countSpan.closest('.myFlex').remove()
+
+          }
+          priceSpan.textContent=priceSpan.textContent-oldPrice;
+          basketSpan.textContent--
+          if(basketSpan.textContent<=0) {
+            basketSpan.textContent=""
+            basketSpan.classList.add('basket-nonActive')
+          }
+        }
+
+        plusSpan.onclick=function () {
+          const oldPrice=Number(`${price}`)
+          countSpan.textContent++
+          priceSpan.textContent=Number(priceSpan.textContent)+oldPrice
+  
+        }
+        countSpan.textContent++
+       
+
+    
+   
     }
+      
   } 
+
+
 }
